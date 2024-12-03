@@ -27,51 +27,15 @@ import me.sizableshrimp.adventofcode2024.templates.Day
 import me.sizableshrimp.adventofcode2024.util.toInts
 
 class Day03 : Day() {
-    override fun evaluate(): Result {
-        val data = this.lines.joinToString(separator = "")
-        val regex = Regex("mul\\((\\d+?),(\\d+?)\\)")
-        var i = 0
-        var doit = true
-        var part1 = 0
-        var part2 = 0
-
-        while (true) {
-            if (i > data.length) break
-            val mul = regex.find(data, i)
-            val mulidx = mul?.range?.start ?: -1
-            val domatch = data.indexOf("do()", i)
-            val dontmatch = data.indexOf("don't()", i)
-            if (domatch != -1) {
-                if ((dontmatch == -1 || domatch < dontmatch) && (mulidx == -1 || domatch < mulidx)) {
-                    doit = true
-                    i = domatch + 4
-                    continue
-                }
-            }
-            if (dontmatch != -1) {
-                if ((domatch == -1 || dontmatch < domatch) && (mulidx == -1 || dontmatch < mulidx)) {
-                    doit = false
-                    i = dontmatch + 7
-                    continue
-                }
-            }
-            if (mulidx != -1) {
-                if ((domatch == -1 || mulidx < domatch) && (dontmatch == -1 || mulidx < dontmatch)) {
-                    val product = mul!!.groupValues.drop(1).toInts().let { (a, b) -> a * b }
-                    part1 += product
-                    if (doit)
-                        part2 += product
-                    i = mul.range.last
-                    continue
-                }
-            }
-            break
-        }
-
-        return Result.of(part1, part2)
-    }
+    override fun evaluate(): Result = this.lines.joinToString(separator = "")
+        .let { listOf(it, it.replace(DONT_DO_REGEX, "")) }
+        .map { s -> MUL_REGEX.findAll(s).sumOf { it.groupValues.drop(1).toInts().reduce { a, b -> a * b } } }
+        .let { (a, b) -> Result.of(a, b) }
 
     companion object {
+        private val MUL_REGEX = Regex("""mul\((\d+?),(\d+?)\)""")
+        private val DONT_DO_REGEX = Regex("""don't\(\).+?(do\(\)|$)""", RegexOption.DOT_MATCHES_ALL)
+
         @JvmStatic
         fun main(args: Array<String>) {
             Day03().run()
