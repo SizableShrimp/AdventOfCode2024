@@ -28,7 +28,7 @@ import me.sizableshrimp.adventofcode2024.util.toInts
 
 class Day03 : Day() {
     override fun evaluate(): Result = this.lines.joinToString(separator = "")
-        .let { listOf(it, it.replace(DONT_DO_REGEX, "")) }
+        .let { listOf(it, it.replace(DONT_DO_REGEX, " ")) }
         .map { s -> MUL_REGEX.findAll(s).sumOf { it.groupValues.drop(1).toInts().reduce { a, b -> a * b } } }
         .let { (a, b) -> Result.of(a, b) }
 
