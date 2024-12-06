@@ -27,8 +27,43 @@ import me.sizableshrimp.adventofcode2024.helper.GridHelper
 import me.sizableshrimp.adventofcode2024.templates.Coordinate
 import me.sizableshrimp.adventofcode2024.templates.Direction
 
-inline fun <reified T> convertToGrid(lines: List<String>, func: (Char) -> T) =
-    Array(lines.size) { y -> Array(lines[y].length) { x -> func(lines[y][x]) } }
+inline fun <reified T> List<String>.toGrid(func: (Char) -> T) =
+    Array(this.size) { y -> Array(this[y].length) { x -> func(this[y][x]) } }
+
+inline fun List<String>.toIntGrid(func: (Char) -> Int) =
+    Array(this.size) { y -> IntArray(this[y].length) { x -> func(this[y][x]) } }
+
+inline fun List<String>.toLongGrid(func: (Char) -> Long) =
+    Array(this.size) { y -> LongArray(this[y].length) { x -> func(this[y][x]) } }
+
+inline fun List<String>.toCharGrid(func: (Char) -> Char) =
+    Array(this.size) { y -> CharArray(this[y].length) { x -> func(this[y][x]) } }
+
+inline fun List<String>.toByteGrid(func: (Char) -> Byte) =
+    Array(this.size) { y -> ByteArray(this[y].length) { x -> func(this[y][x]) } }
+
+inline fun List<String>.toDoubleGrid(func: (Char) -> Double) =
+    Array(this.size) { y -> DoubleArray(this[y].length) { x -> func(this[y][x]) } }
+
+inline fun List<String>.toFloatGrid(func: (Char) -> Float) =
+    Array(this.size) { y -> FloatArray(this[y].length) { x -> func(this[y][x]) } }
+
+inline fun List<String>.toBooleanGrid(func: (Char) -> Boolean) =
+    Array(this.size) { y -> BooleanArray(this[y].length) { x -> func(this[y][x]) } }
+
+inline fun <reified T> List<String>.toGridWithCoord(func: (Coordinate, Char) -> T) =
+    Array(this.size) { y -> Array(this[y].length) { x -> func(Coordinate.of(x, y), this[y][x]) } }
+
+fun List<String>.findCoord(target: Char): Coordinate? {
+    for ((y, row) in this.withIndex()) {
+        for ((x, c) in row.withIndex()) {
+            if (c == target)
+                return Coordinate.of(x, y)
+        }
+    }
+
+    return null
+}
 
 fun List<String>.toCharGrid(): Array<CharArray> = GridHelper.createCharGrid(this)
 
@@ -39,6 +74,47 @@ fun List<String>.toCharGrid(): Array<CharArray> = GridHelper.createCharGrid(this
  * @return the 2D grid of single-digit integers
  */
 fun List<String>.toIntGrid(): Array<IntArray> = GridHelper.createIntGrid(this)
+
+inline operator fun <reified T> Array<Array<T>>.get(coord: Coordinate) = this[coord.y][coord.x]
+operator fun Array<IntArray>.get(coord: Coordinate) = this[coord.y][coord.x]
+operator fun Array<LongArray>.get(coord: Coordinate) = this[coord.y][coord.x]
+operator fun Array<CharArray>.get(coord: Coordinate) = this[coord.y][coord.x]
+operator fun Array<ByteArray>.get(coord: Coordinate) = this[coord.y][coord.x]
+operator fun Array<DoubleArray>.get(coord: Coordinate) = this[coord.y][coord.x]
+operator fun Array<FloatArray>.get(coord: Coordinate) = this[coord.y][coord.x]
+operator fun Array<BooleanArray>.get(coord: Coordinate) = this[coord.y][coord.x]
+
+inline operator fun <reified T> Array<Array<T>>.set(coord: Coordinate, value: T) {
+    this[coord.y][coord.x] = value
+}
+
+operator fun Array<IntArray>.set(coord: Coordinate, value: Int) {
+    this[coord.y][coord.x] = value
+}
+
+operator fun Array<LongArray>.set(coord: Coordinate, value: Long) {
+    this[coord.y][coord.x] = value
+}
+
+operator fun Array<CharArray>.set(coord: Coordinate, value: Char) {
+    this[coord.y][coord.x] = value
+}
+
+operator fun Array<ByteArray>.set(coord: Coordinate, value: Byte) {
+    this[coord.y][coord.x] = value
+}
+
+operator fun Array<DoubleArray>.set(coord: Coordinate, value: Double) {
+    this[coord.y][coord.x] = value
+}
+
+operator fun Array<FloatArray>.set(coord: Coordinate, value: Float) {
+    this[coord.y][coord.x] = value
+}
+
+operator fun Array<BooleanArray>.set(coord: Coordinate, value: Boolean) {
+    this[coord.y][coord.x] = value
+}
 
 fun <T> Array<Array<T>>.getCardinalNeighbors(coord: Coordinate) = Iterable {
     iterator<Pair<Direction, Coordinate>> {

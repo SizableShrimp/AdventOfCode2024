@@ -24,6 +24,7 @@
 package me.sizableshrimp.adventofcode2024.days
 
 import me.sizableshrimp.adventofcode2024.templates.Day
+import me.sizableshrimp.adventofcode2024.util.*
 
 class BaseClassKotlin : Day() {
     override fun evaluate(): Result {
@@ -35,5 +36,9 @@ class BaseClassKotlin : Day() {
         fun main(args: Array<String>) {
             BaseClassKotlin().run()
         }
+
+        // Dummy to ensure util package always stays imported
+        @Suppress("UNUSED")
+        private fun never() = 0.repeat(0)
     }
 }
