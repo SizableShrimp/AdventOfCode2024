@@ -222,24 +222,48 @@ public class GridHelper {
         throw new IllegalStateException();
     }
 
+    public static <T> String toString(T[][] grid) {
+        return Printer.toString(grid);
+    }
+
     public static <T> void print(T[][] grid) {
-        System.out.println(Printer.toString(grid));
+        System.out.println(toString(grid));
+    }
+
+    public static <T extends Enum<T> & EnumState<T>> String toString(T[][] grid) {
+        return Printer.toString(grid);
     }
 
     public static <T extends Enum<T> & EnumState<T>> void print(T[][] grid) {
-        System.out.println(Printer.toString(grid));
+        System.out.println(toString(grid));
+    }
+
+    public static String toString(int[][] grid) {
+        return Printer.toString(grid);
     }
 
     public static void print(int[][] grid) {
-        System.out.println(Printer.toString(grid));
+        System.out.println(toString(grid));
+    }
+
+    public static String toString(long[][] grid) {
+        return Printer.toString(grid);
     }
 
     public static void print(long[][] grid) {
-        System.out.println(Printer.toString(grid));
+        System.out.println(toString(grid));
+    }
+
+    public static String toString(boolean[][] grid) {
+        return Printer.toString(grid);
     }
 
     public static void print(boolean[][] grid) {
         System.out.println(Printer.toString(grid));
+    }
+
+    public static String toString(char[][] grid) {
+        return Printer.toString(grid);
     }
 
     public static void print(char[][] grid) {
