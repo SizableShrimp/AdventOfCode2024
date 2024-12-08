@@ -31,7 +31,7 @@ import me.sizableshrimp.adventofcode2024.util.*
 
 class Day06 : Day() {
     override fun evaluate(): Result {
-        val startPos = this.lines.findCoord('^')!!
+        val startPos = this.lines.findFirstCoord('^')!!
         val grid = this.lines.toBooleanGrid { it == '#' }
         grid[startPos] = false
 

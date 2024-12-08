@@ -54,7 +54,7 @@ inline fun List<String>.toBooleanGrid(func: (Char) -> Boolean) =
 inline fun <reified T> List<String>.toGridWithCoord(func: (Coordinate, Char) -> T) =
     Array(this.size) { y -> Array(this[y].length) { x -> func(Coordinate.of(x, y), this[y][x]) } }
 
-fun List<String>.findCoord(target: Char): Coordinate? {
+fun List<String>.findFirstCoord(target: Char): Coordinate? {
     for ((y, row) in this.withIndex()) {
         for ((x, c) in row.withIndex()) {
             if (c == target)
@@ -63,6 +63,19 @@ fun List<String>.findCoord(target: Char): Coordinate? {
     }
 
     return null
+}
+
+fun List<String>.findAllCoords(target: Char): Set<Coordinate> {
+    val set = mutableSetOf<Coordinate>()
+
+    for ((y, row) in this.withIndex()) {
+        for ((x, c) in row.withIndex()) {
+            if (c == target)
+                set.add(Coordinate.of(x, y))
+        }
+    }
+
+    return set
 }
 
 fun List<String>.toCharGrid(): Array<CharArray> = GridHelper.createCharGrid(this)
