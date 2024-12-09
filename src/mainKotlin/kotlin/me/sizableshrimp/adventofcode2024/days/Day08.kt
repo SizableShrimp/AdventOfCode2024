@@ -29,7 +29,6 @@ import me.sizableshrimp.adventofcode2024.templates.Coordinate
 import me.sizableshrimp.adventofcode2024.templates.Day
 import me.sizableshrimp.adventofcode2024.util.minus
 import me.sizableshrimp.adventofcode2024.util.plus
-import me.sizableshrimp.adventofcode2024.util.repeat
 import me.sizableshrimp.adventofcode2024.util.toCharGrid
 
 class Day08 : Day() {
@@ -57,7 +56,7 @@ class Day08 : Day() {
                 listOf(generateSequence(a) { it + diff }, generateSequence(b) { it - diff }).map { s ->
                     s.takeWhile { GridHelper.isValid(grid, it) }
                         .forEachIndexed { i, coord ->
-                            // First element is the antenna itself, second element is the anode directly following it
+                            // First element is the antenna itself, second element is the antinode directly following it
                             if (i == 1) part1.add(coord)
                             part2.add(coord)
                         }
@@ -73,9 +72,5 @@ class Day08 : Day() {
         fun main(args: Array<String>) {
             Day08().run()
         }
-
-        // Dummy to ensure util package always stays imported
-        @Suppress("UNUSED")
-        private fun never() = 0.repeat(0)
     }
 }
