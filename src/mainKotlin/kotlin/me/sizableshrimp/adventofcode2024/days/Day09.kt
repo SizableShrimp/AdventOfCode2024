@@ -24,7 +24,6 @@
 package me.sizableshrimp.adventofcode2024.days
 
 import me.sizableshrimp.adventofcode2024.templates.Day
-import me.sizableshrimp.adventofcode2024.util.*
 import java.util.LinkedList
 
 class Day09 : Day() {
@@ -128,9 +127,5 @@ class Day09 : Day() {
         fun main(args: Array<String>) {
             Day09().run()
         }
-
-        // Dummy to ensure util package always stays imported
-        @Suppress("UNUSED")
-        private fun never() = 0.repeat(0)
     }
 }

@@ -71,6 +71,11 @@ fun List<String>.toBooleans(): BooleanList = this.mapTo(BooleanArrayList(this.si
 
 fun List<String>.toChars(): CharList = this.mapTo(CharArrayList(this.size)) { it[0] }
 
+fun <T> List<T>.toPair(): Pair<T, T> {
+    require(this.size == 2) { "List must have exactly 2 elements" }
+    return this[0] to this[1]
+}
+
 fun IntCollection.max(): Int {
     val iterator = this.intIterator()
     require(iterator.hasNext()) { "Collection is empty" }

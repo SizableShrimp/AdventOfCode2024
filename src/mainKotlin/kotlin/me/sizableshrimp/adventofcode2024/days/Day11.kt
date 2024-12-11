@@ -26,19 +26,35 @@ package me.sizableshrimp.adventofcode2024.days
 import me.sizableshrimp.adventofcode2024.templates.Day
 import me.sizableshrimp.adventofcode2024.util.*
 
-class Day03 : Day() {
-    override fun evaluate(): Result = this.lines.joinToString(separator = "")
-        .let { listOf(it, it.replace(DONT_DO_REGEX, " ")) }
-        .map { s -> MUL_REGEX.findAll(s).sumOf { it.groupValues.drop(1).toInts().reduce { a, b -> a * b } } }
-        .toResult()
+class Day11 : Day() {
+    override fun evaluate(): Result {
+        val stones = this.lines[0].split(" ").toLongs()
+        val seen = mutableMapOf<Pair<Long, Int>, Long>()
+
+        return listOf(25, 75).map { blinks -> stones.sumOf { sim(seen, it, blinks) } }.toResult()
+    }
+
+    private fun sim(seen: MutableMap<Pair<Long, Int>, Long>, stone: Long, step: Int): Long {
+        if (step == 0) return 1
+        seen[stone to step]?.let { return it }
+        if (stone == 0L) return sim(seen, 1L, step - 1).also { seen[0L to step] = it }
+
+        val stoneStr = stone.toString()
+
+        return if (stoneStr.length % 2 == 0) {
+            val half = stoneStr.length / 2
+            val left = stoneStr.substring(0, half).toLong()
+            val right = stoneStr.substring(half).toLong()
+            sim(seen, left, step - 1) + sim(seen, right, step - 1)
+        } else {
+            sim(seen, stone * 2024, step - 1)
+        }.also { seen[stone to step] = it }
+    }
 
     companion object {
-        private val MUL_REGEX = Regex("""mul\((\d+?),(\d+?)\)""")
-        private val DONT_DO_REGEX = Regex("""don't\(\).+?(do\(\)|$)""", RegexOption.DOT_MATCHES_ALL)
-
         @JvmStatic
         fun main(args: Array<String>) {
-            Day03().run()
+            Day11().run()
         }
     }
 }

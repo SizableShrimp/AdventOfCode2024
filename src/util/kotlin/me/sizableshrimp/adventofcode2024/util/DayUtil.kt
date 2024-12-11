@@ -21,24 +21,15 @@
  * SOFTWARE.
  */
 
-package me.sizableshrimp.adventofcode2024.days
+package me.sizableshrimp.adventofcode2024.util
 
 import me.sizableshrimp.adventofcode2024.templates.Day
-import me.sizableshrimp.adventofcode2024.util.*
 
-class Day03 : Day() {
-    override fun evaluate(): Result = this.lines.joinToString(separator = "")
-        .let { listOf(it, it.replace(DONT_DO_REGEX, " ")) }
-        .map { s -> MUL_REGEX.findAll(s).sumOf { it.groupValues.drop(1).toInts().reduce { a, b -> a * b } } }
-        .toResult()
+fun <T> List<T>.toResult(): Day.Result {
+    require(this.size == 2) { "List must have exactly 2 elements" }
+    return Day.Result.of(this[0], this[1])
+}
 
-    companion object {
-        private val MUL_REGEX = Regex("""mul\((\d+?),(\d+?)\)""")
-        private val DONT_DO_REGEX = Regex("""don't\(\).+?(do\(\)|$)""", RegexOption.DOT_MATCHES_ALL)
-
-        @JvmStatic
-        fun main(args: Array<String>) {
-            Day03().run()
-        }
-    }
+fun <T> Pair<T, T>.toResult(): Day.Result {
+    return Day.Result.of(this.first, this.second)
 }
