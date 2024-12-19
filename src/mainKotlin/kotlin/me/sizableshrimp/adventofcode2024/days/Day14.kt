@@ -45,7 +45,7 @@ class Day14 : Day() {
             .groupingBy { pos -> (pos.x >= dimensions.x / 2) to (pos.y >= dimensions.y / 2) }
             .eachCount()
             .values
-            .reduce { a, b -> a * b }
+            .reduce(Int::times)
         val part2 = robotSeq().map { it.toMutableSet() }.takeWhile { robots ->
             val queue = ArrayDeque<Coordinate>()
             val seen = mutableSetOf<Coordinate>()
