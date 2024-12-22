@@ -23,9 +23,9 @@
 
 package me.sizableshrimp.adventofcode2024.util
 
-fun <S : Comparable<S>, ID> search(
+fun <S, ID> searchBest(
     start: S, target: ID, getId: (S) -> ID,
-    bfs: Boolean = true, comparator: Comparator<S> = Comparator.naturalOrder(),
+    comparator: Comparator<S>, bfs: Boolean = true,
     run: (state: S, addNext: (S) -> Unit) -> Unit
 ): Pair<Map<ID, S>, S?> {
     val queue = ArrayDeque<S>()
@@ -56,10 +56,68 @@ fun <S : Comparable<S>, ID> search(
     return seen to min
 }
 
-private fun <S : Comparable<S>, ID> isBetterState(seen: Map<ID, S>, comparator: Comparator<S>, id: ID, state: S) =
+fun <S : Comparable<S>, ID> searchBest(
+    start: S, target: ID, getId: (S) -> ID,
+    bfs: Boolean = true, comparator: Comparator<S> = Comparator.naturalOrder(),
+    run: (state: S, addNext: (S) -> Unit) -> Unit
+) = searchBest(start, target, getId, comparator, bfs, run)
+
+fun <S, ID> searchAll(
+    start: S, getId: (S) -> ID,
+    comparator: Comparator<S>, bfs: Boolean = true,
+    run: (state: S, addNext: (S) -> Unit) -> Unit
+): Map<ID, S> {
+    val queue = ArrayDeque<S>()
+    val seen = mutableMapOf<ID, S>()
+    queue.add(start)
+    seen[getId(start)] = start
+    val addNext = { s: S ->
+        val id = getId(s)
+        if (isBetterState(seen, comparator, id, s)) {
+            seen[id] = s
+            queue.add(s)
+        }
+    }
+
+    while (queue.isNotEmpty()) {
+        val state = if (bfs) queue.removeFirst() else queue.removeLast()
+        if (isWorseState(seen, comparator, getId(state), state)) continue
+
+        run(state, addNext)
+    }
+
+    return seen
+}
+
+fun <S : Comparable<S>, ID> searchAll(
+    start: S, getId: (S) -> ID,
+    bfs: Boolean = true, comparator: Comparator<S> = Comparator.naturalOrder(),
+    run: (state: S, addNext: (S) -> Unit) -> Unit
+) = searchAll(start, getId, comparator, bfs, run)
+
+fun <S> searchNoRepeats(
+    start: S, bfs: Boolean = true,
+    run: (state: S, addNext: (S) -> Unit) -> Unit
+): Set<S> {
+    val queue = ArrayDeque<S>()
+    val seen = mutableSetOf<S>()
+    queue.add(start)
+    seen.add(start)
+    val addNext = { s: S -> if (seen.add(s)) queue.add(s) }
+
+    while (queue.isNotEmpty()) {
+        val state = if (bfs) queue.removeFirst() else queue.removeLast()
+
+        run(state, addNext)
+    }
+
+    return seen
+}
+
+private fun <S, ID> isBetterState(seen: Map<ID, S>, comparator: Comparator<S>, id: ID, state: S) =
     seen[id]?.let { comparator.compare(state, it) < 0 } ?: true
 
-private fun <S : Comparable<S>, ID> isWorseState(seen: Map<ID, S>, comparator: Comparator<S>, id: ID, state: S) =
+private fun <S, ID> isWorseState(seen: Map<ID, S>, comparator: Comparator<S>, id: ID, state: S) =
     seen[id]?.let { comparator.compare(it, state) < 0 } ?: false
 
 fun <S, ID, O> searchMemoizing(

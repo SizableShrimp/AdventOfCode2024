@@ -43,7 +43,7 @@ class Day18 : Day() {
         while (true) {
             grid[coords[i]] = true
 
-            val min = search(State(Coordinate(0, 0), 0), target, { it.coord }) { (coord, score), addNext ->
+            val min = searchBest(State(Coordinate(0, 0), 0), target, { it.coord }) { (coord, score), addNext ->
                 for ((_, next) in grid.getCardinalNeighbors(coord)) {
                     if (!grid[next]) {
                         addNext(State(next, score + 1))
