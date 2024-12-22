@@ -23,9 +23,10 @@
 
 package me.sizableshrimp.adventofcode2024.days
 
-import me.sizableshrimp.adventofcode2024.templates.Coordinate
+import me.sizableshrimp.adventofcode2024.helper.GridHelper
 import me.sizableshrimp.adventofcode2024.templates.Day
 import me.sizableshrimp.adventofcode2024.util.*
+import kotlin.math.abs
 
 class Day20 : Day() {
     override fun evaluate(): Result {
@@ -39,29 +40,19 @@ class Day20 : Day() {
             }
         }
         val minPath = starts[target]!!.second
-        // val occurrences = sortedMapOf<Int, Int>()
 
         return listOf(2, 20).map { cheatSize ->
-            grid.filter2D { coord, wall -> !wall && coord != target }.sumOf { (start, _) ->
-                val cheatSearch = searchNoRepeats(State(start, false)) { s, addNext ->
-                    if (s.coord == target) return@searchNoRepeats
-                    for ((_, next) in grid.getCardinalNeighbors(s.coord)) {
-                        if (start.distance(next) <= cheatSize)
-                            addNext(State(next, s.cheated || grid[next]))
+            grid.filter2D { _, wall -> !wall }.sumOf { (begin, _) ->
+                (-cheatSize..cheatSize).flatMap { dy ->
+                    (-(cheatSize - abs(dy))..(cheatSize - abs(dy))).map { dx ->
+                        begin.resolve(dx, dy)
                     }
-                }
-                val validCheats = cheatSearch.filter { (coord, cheated) ->
-                    cheated && coord != start && !grid[coord]
-                }.map { it.coord }
-                validCheats
-                    .map { end -> starts[start]!!.second + ends[end]!!.second + start.distance(end) }
-                    // .onEach { if (it < minPath) occurrences.compute(minPath - it) { _, v -> if (v == null) 1 else v + 1 } }
+                }.filter { it != begin && GridHelper.isValid(grid, it) && !grid[it] }
+                    .map { end -> starts[begin]!!.second + ends[end]!!.second + begin.distance(end) }
                     .count { it <= minPath - 100 }
             }
         }.toResult()
     }
-
-    private data class State(val coord: Coordinate, val cheated: Boolean)
 
     companion object {
         @JvmStatic
