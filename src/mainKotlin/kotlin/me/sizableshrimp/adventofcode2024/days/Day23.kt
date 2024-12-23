@@ -33,16 +33,18 @@ class Day23 : Day() {
             nodes.getOrPut(a) { Node(a, mutableSetOf()) }.others.add(b)
             nodes.getOrPut(b) { Node(b, mutableSetOf()) }.others.add(a)
         }
-        val seen = mutableSetOf<Set<String>>()
+        val part1 = mutableSetOf<Set<String>>()
         var part2 = setOf<Node>()
+        val seen = mutableSetOf<String>()
 
         for (n in nodes.values) {
+            seen.add(n.id)
             for (o in n.others) {
                 val other = nodes[o]!!
                 for (p in other.others) {
                     if (n.others.contains(p)) {
                         if (n.id[0] == 't' || o[0] == 't' || p[0] == 't') {
-                            seen.add(setOf(n.id, o, p))
+                            part1.add(setOf(n.id, o, p))
                         }
                     }
                 }
@@ -50,6 +52,7 @@ class Day23 : Day() {
 
             val maxGroup = searchNoRepeats(n to setOf(n)) { (curr, s), addNext ->
                 for (o in curr.others) {
+                    if (seen.contains(o)) continue
                     if (s.all { it.others.contains(o) }) {
                         val next = nodes[o]!!
                         addNext(next to (s + next))
@@ -59,7 +62,7 @@ class Day23 : Day() {
             if (maxGroup.size > part2.size) part2 = maxGroup
         }
 
-        return Result.of(seen.size, part2.map { it.id }.sorted().joinToString(","))
+        return Result.of(part1.size, part2.map { it.id }.sorted().joinToString(","))
     }
 
     private data class Node(val id: String, val others: MutableSet<String>)
