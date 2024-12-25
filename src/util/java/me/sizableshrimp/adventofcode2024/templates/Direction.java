@@ -67,11 +67,26 @@ public enum Direction {
     }
 
     public static Direction parseDirection(int xDiff, int yDiff) {
-        for (Direction dir : Direction.values()) {
-            if (dir.x == xDiff && dir.y == yDiff)
-                return dir;
-        }
-        throw new IllegalArgumentException();
+        return switch (xDiff) {
+            case -1 -> switch (yDiff) {
+                case -1 -> NORTHWEST;
+                case 0 -> WEST;
+                case 1 -> SOUTHWEST;
+                default -> throw new IllegalArgumentException();
+            };
+            case 0 -> switch (yDiff) {
+                case -1 -> NORTH;
+                case 1 -> SOUTH;
+                default -> throw new IllegalArgumentException();
+            };
+            case 1 -> switch (yDiff) {
+                case -1 -> NORTHEAST;
+                case 0 -> EAST;
+                case 1 -> SOUTHEAST;
+                default -> throw new IllegalArgumentException();
+            };
+            default -> throw new IllegalArgumentException();
+        };
     }
 
     public static Direction getCardinalDirection(char c) {

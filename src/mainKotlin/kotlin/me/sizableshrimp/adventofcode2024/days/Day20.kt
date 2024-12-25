@@ -33,9 +33,9 @@ class Day20 : Day() {
         val grid = this.lines.toBooleanGrid { it == '#' }
         val target = this.lines.findFirstCoord('E')!!
         val (starts, ends) = listOf(this.lines.findFirstCoord('S')!!, target).map { t ->
-            searchAll(t to 0, { it.first }, Comparator.comparingInt { it.second }) { (coord, step), addNext ->
+            searchAllSimple(t) { coord, addNext ->
                 for ((_, next) in grid.getCardinalNeighbors(coord)) {
-                    if (!grid[next]) addNext(next to (step + 1))
+                    if (!grid[next]) addNext(next)
                 }
             }
         }

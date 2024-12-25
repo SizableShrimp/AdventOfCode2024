@@ -171,6 +171,19 @@ private fun <S, ID> isWorseState(seen: Map<ID, S>, comparator: Comparator<S>, id
     seen[id]?.let { comparator.compare(it, state) < 0 } ?: false
 
 fun <S, ID, O> searchMemoizing(
+    getId: (S) -> ID,
+    run: (state: S, next: (S) -> O) -> O
+): (S) -> O {
+    val seen = mutableMapOf<ID, O>()
+
+    fun recurse(s: S): O = getId(s).let { id ->
+        seen[id] ?: run(s, ::recurse).also { seen[id] = it }
+    }
+
+    return { start -> run(start, ::recurse) }
+}
+
+fun <S, ID, O> searchMemoizing(
     start: S, getId: (S) -> ID,
     run: (state: S, next: (S) -> O) -> O
 ): O {
@@ -184,6 +197,16 @@ fun <S, ID, O> searchMemoizing(
 }
 
 fun <S, O> searchMemoizing(
+    run: (state: S, next: (S) -> O) -> O
+): (S) -> O {
+    val seen = mutableMapOf<S, O>()
+
+    fun recurse(s: S): O = seen[s] ?: run(s, ::recurse).also { seen[s] = it }
+
+    return { start -> run(start, ::recurse) }
+}
+
+fun <S, O> searchMemoizing(
     start: S,
     run: (state: S, next: (S) -> O) -> O
 ): O {
@@ -193,4 +216,3 @@ fun <S, O> searchMemoizing(
 
     return run(start, ::recurse)
 }
-
