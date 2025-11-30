@@ -63,6 +63,8 @@ operator fun LongCoordinate.div(num: Int): LongCoordinate = LongCoordinate(this.
 
 operator fun LongCoordinate.rem(other: LongCoordinate) = LongCoordinate(this.x % other.x, this.y % other.y)
 
+fun LongCoordinate.mod(other: LongCoordinate) = LongCoordinate(this.x.mod(other.x), this.y.mod(other.y))
+
 /**
  * Calls the consumer for all (x, y) LongCoordinates between this LongCoordinate and the other LongCoordinate, inclusive.
  */
