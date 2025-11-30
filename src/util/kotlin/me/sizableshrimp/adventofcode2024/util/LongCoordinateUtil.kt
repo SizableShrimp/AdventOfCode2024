@@ -28,6 +28,13 @@ import me.sizableshrimp.adventofcode2024.templates.Direction
 import kotlin.math.max
 import kotlin.math.min
 
+fun List<Long>.toCoordinate(): LongCoordinate {
+    check(this.size == 2) { "List must have exactly 2 elements to form a coordinate" }
+    return LongCoordinate(this[0], this[1])
+}
+
+fun Pair<Long, Long>.toCoordinate() = LongCoordinate(this.first, this.second)
+
 operator fun LongCoordinate.plus(other: LongCoordinate): LongCoordinate = this.resolve(other)
 
 operator fun LongCoordinate.plus(dir: Direction): LongCoordinate = this.resolve(dir)

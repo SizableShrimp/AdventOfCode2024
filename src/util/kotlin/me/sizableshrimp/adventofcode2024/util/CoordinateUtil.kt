@@ -28,6 +28,13 @@ import me.sizableshrimp.adventofcode2024.templates.Direction
 import kotlin.math.max
 import kotlin.math.min
 
+fun List<Int>.toCoordinate(): Coordinate {
+    check(this.size == 2) { "List must have exactly 2 elements to form a coordinate" }
+    return Coordinate(this[0], this[1])
+}
+
+fun Pair<Int, Int>.toCoordinate() = Coordinate(this.first, this.second)
+
 operator fun Coordinate.plus(other: Coordinate): Coordinate = this.resolve(other)
 
 operator fun Coordinate.plus(dir: Direction): Coordinate = this.resolve(dir)
@@ -50,22 +57,7 @@ operator fun Coordinate.div(num: Int): Coordinate = Coordinate(this.x / num, thi
 
 operator fun Coordinate.rem(other: Coordinate) = Coordinate(this.x % other.x, this.y % other.y)
 
-// Hard to use since IntelliJ doesn't seem able to auto-import these or suggest these as a possible import.
-// operator fun Array<IntArray>.get(coord: Coordinate) = this[coord.y][coord.x]
-//
-// operator fun Array<LongArray>.get(coord: Coordinate) = this[coord.y][coord.x]
-//
-// operator fun Array<CharArray>.get(coord: Coordinate) = this[coord.y][coord.x]
-//
-// operator fun Array<ByteArray>.get(coord: Coordinate) = this[coord.y][coord.x]
-//
-// operator fun Array<DoubleArray>.get(coord: Coordinate) = this[coord.y][coord.x]
-//
-// operator fun Array<FloatArray>.get(coord: Coordinate) = this[coord.y][coord.x]
-//
-// operator fun Array<BooleanArray>.get(coord: Coordinate) = this[coord.y][coord.x]
-//
-// operator fun <T> Array<Array<T>>.get(coord: Coordinate) = this[coord.y][coord.x]
+fun Coordinate.mod(other: Coordinate) = Coordinate(this.x.mod(other.x), this.y.mod(other.y))
 
 /**
  * Calls the consumer for all (x, y) coordinates between this coordinate and the other coordinate, inclusive.
